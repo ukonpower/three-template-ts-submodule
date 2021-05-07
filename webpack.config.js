@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
+	watch: true,
     mode: 'development',
     entry: {
         main: ''
@@ -16,14 +17,22 @@ module.exports = {
                 use: 'ts-loader'
             },
             {
-                test: /\.(glsl|vs|fs)$/,
-                loader: 'shader-loader',
-                options: {
-                    glsl: {
-                        chunkPath: './src/glsl-chunks'
-                    }
-                }
-            }
+				test: /\.(vs|fs|glsl)$/,
+				exclude: /node_modules/,
+				use: [
+					'raw-loader',
+					{
+						loader: 'glslify-loader',
+						options: {
+							transform: [
+								['glslify-hex'],
+								['glslify-import']
+							],
+							basedir: './src/glsl-chunks'
+						}
+					}
+				]
+			}
         ]
     },
     resolve: {
@@ -31,5 +40,14 @@ module.exports = {
         alias: {
             "@ore-three-ts": path.resolve(__dirname, 'src/common/ts/ore-three-ts/src')
         }
-    }
+	},
+	cache: {
+		type: 'filesystem',
+		buildDependencies: {
+			config: [__filename]
+		}
+	},
+	optimization: {
+		innerGraph: true
+	}
 };
