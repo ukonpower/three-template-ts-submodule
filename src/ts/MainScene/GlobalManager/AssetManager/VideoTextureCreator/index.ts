@@ -3,13 +3,11 @@ import * as ORE from '@ore-three-ts';
 
 export class VideoTextureCreator extends ORE.EventDispatcher {
 
-	private loaded: boolean = false;
-
-	private videoElm: HTMLVideoElement;
-	private imgURL: string;
+	private videoElm?: HTMLVideoElement;
 	private url: string;
+	private imgURL?: string;
 
-	constructor( url: string, imgURL: string ) {
+	constructor( url: string, imgURL?: string ) {
 
 		super();
 
@@ -30,10 +28,9 @@ export class VideoTextureCreator extends ORE.EventDispatcher {
 
 	private onVideoLoaded() {
 
-		if ( this.loaded ) return;
-		this.loaded = true;
+		if ( ! this.videoElm ) return;
 
-		this.videoElm.play();
+		this.videoElm?.play();
 
 		let texture = new THREE.VideoTexture( this.videoElm );
 
@@ -54,6 +51,8 @@ export class VideoTextureCreator extends ORE.EventDispatcher {
 
 		texture.onUpdate = () => {
 
+			if ( ! this.videoElm ) return;
+
 			if ( this.videoElm.currentTime >= duration ) {
 
 				this.videoElm.currentTime = 0;
@@ -66,6 +65,8 @@ export class VideoTextureCreator extends ORE.EventDispatcher {
 		document.addEventListener( 'visibilitychange', () => {
 
 			setTimeout( () => {
+
+				if ( ! this.videoElm ) return;
 
 				this.videoElm.play();
 
@@ -91,12 +92,18 @@ export class VideoTextureCreator extends ORE.EventDispatcher {
 
 			this.createImageTexture();
 
-			this.videoElm.onplay = () => {
+			if ( this.videoElm ) {
 
-				this.videoElm.currentTime = 4.5;
-				this.videoElm.onplay = null;
+				this.videoElm.onplay = () => {
 
-			};
+					if ( ! this.videoElm ) return;
+
+					this.videoElm.currentTime = 4.5;
+					this.videoElm.onplay = null;
+
+				};
+
+			}
 
 		};
 
@@ -135,6 +142,8 @@ export class VideoTextureCreator extends ORE.EventDispatcher {
 	}
 
 	public switchPlay( play: boolean ) {
+
+		if ( ! this.videoElm ) return;
 
 		if ( play ) {
 

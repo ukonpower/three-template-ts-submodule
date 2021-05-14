@@ -13,19 +13,18 @@ export class CameraController {
 
 	private baseCamera: THREE.PerspectiveCamera;
 
-	constructor( obj: THREE.PerspectiveCamera, data: THREE.Object3D ) {
+	constructor( camera: THREE.PerspectiveCamera, data?: THREE.Object3D ) {
 
-		this.camera = obj;
-		this.cameraBasePos = data.getObjectByName( 'Camera' ).getWorldPosition( new THREE.Vector3() );
-		this.cameraTargetPos = data.getObjectByName( 'CameraTarget' ).getWorldPosition( new THREE.Vector3() );
+		this.camera = camera;
 
-		this.baseCamera = data.getObjectByName( 'Camera' ).children[ 0 ] as THREE.PerspectiveCamera;
+		let cameraModel = data && data.getObjectByName( 'Camera' ) as THREE.PerspectiveCamera;
+		this.cameraBasePos = cameraModel ? cameraModel.getWorldPosition( new THREE.Vector3() ) : new THREE.Vector3( 0, 1, 5 );
 
-		this.init();
+		let cameraTarget = data && data.getObjectByName( 'CameraTarget' );
+		this.cameraTargetPos = cameraTarget ? cameraTarget.getWorldPosition( new THREE.Vector3() ) : new THREE.Vector3( 0, 1, 0 );
 
-	}
-
-	protected init() {
+		let baseCamera = data && data.getObjectByName( 'Camera' );
+		this.baseCamera = baseCamera ? baseCamera.children[ 0 ] as THREE.PerspectiveCamera : camera.clone();
 
 		this.cursorPos = new THREE.Vector2();
 		this.cursorPosDelay = new THREE.Vector2();

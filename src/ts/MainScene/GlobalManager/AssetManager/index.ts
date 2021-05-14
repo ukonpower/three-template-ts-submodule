@@ -5,16 +5,18 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { VideoTextureCreator } from './VideoTextureCreator';
 
 declare interface TextureParam {
-	mapping?: THREE.Mapping;
-	wrapS?: THREE.Wrapping;
-	wrapT?: THREE.Wrapping;
-	magFilter?: THREE.TextureFilter;
-	minFilter?: THREE.TextureFilter;
-	format?: THREE.PixelFormat;
-	type?: THREE.TextureDataType;
-	anisotropy?: number;
-	encoding?: THREE.TextureEncoding;
+	premultiplyAlpha?: boolean
+	mapping?: THREE.Mapping
+	wrapS?: THREE.Wrapping
+	wrapT?: THREE.Wrapping
+	magFilter?: THREE.TextureFilter
+	minFilter?: THREE.TextureFilter
+	format?: THREE.PixelFormat
+	type?: THREE.TextureDataType
+	anisotropy?: number
+	encoding?: THREE.TextureEncoding
 }
+
 
 declare interface TextureInfo {
 	path: string;
@@ -41,7 +43,7 @@ export class AssetManager extends ORE.EventDispatcher {
 	private mustLoadTexturesInfo: TextureInfo[];
 	private subLoadTexturesInfo: TextureInfo[];
 
-	public gltfScene: THREE.Group;
+	public gltfScene: THREE.Group | null = null;
 	public textures: ORE.Uniforms = {};
 
 	public get isLoaded() {
@@ -64,11 +66,9 @@ export class AssetManager extends ORE.EventDispatcher {
 
 		this.subLoadTexturesInfo = [];
 
-		this.initLoadingManager();
-
-	}
-
-	private initLoadingManager( ) {
+		/*------------------------
+			InitLoadingManager
+		------------------------*/
 
 		this.preLoadingManager = new THREE.LoadingManager(
 			() => {
@@ -101,7 +101,6 @@ export class AssetManager extends ORE.EventDispatcher {
 		);
 
 	}
-
 	public load() {
 
 		this.loadPreAssets(
@@ -236,13 +235,16 @@ export class AssetManager extends ORE.EventDispatcher {
 
 		if ( param ) {
 
-			let keys = Object.keys( param );
-
-			for ( let i = 0; i < keys.length; i ++ ) {
-
-				tex[ keys[ i ] ] = param[ keys[ i ] ];
-
-			}
+			tex.premultiplyAlpha = param.premultiplyAlpha || false;
+			tex.mapping = param.mapping || THREE.Texture.DEFAULT_MAPPING;
+			tex.wrapS = param.wrapS || THREE.ClampToEdgeWrapping;
+			tex.wrapT = param.wrapT || THREE.ClampToEdgeWrapping;
+			tex.magFilter = param.magFilter || THREE.LinearFilter;
+			tex.minFilter = param.minFilter || THREE.LinearFilter;
+			tex.format = param.format || THREE.RGBAFormat;
+			tex.type = param.type || THREE.UnsignedByteType;
+			tex.anisotropy = param.anisotropy || 1;
+			tex.encoding = param.encoding || THREE.LinearEncoding;
 
 		}
 

@@ -5,9 +5,9 @@ import { RenderPipeline } from './RenderPipeline';
 import { CameraController } from './CameraController';
 export class MainScene extends ORE.BaseLayer {
 
-	private gManager: GlobalManager;
-	private renderPipeline: RenderPipeline;
-	private cameraController: CameraController;
+	private gManager?: GlobalManager;
+	private renderPipeline?: RenderPipeline;
+	private cameraController?: CameraController;
 
 	constructor() {
 
@@ -24,7 +24,11 @@ export class MainScene extends ORE.BaseLayer {
 		this.gManager = new GlobalManager( {
 			onMustAssetsLoaded: () => {
 
-				this.scene.add( window.assetManager.gltfScene );
+				if ( window.assetManager.gltfScene ) {
+
+					this.scene.add( window.assetManager.gltfScene );
+
+				}
 
 				this.initScene();
 
@@ -37,7 +41,11 @@ export class MainScene extends ORE.BaseLayer {
 
 	private initScene() {
 
-		this.renderPipeline = new RenderPipeline( this.renderer, 0.5, 3.0, this.commonUniforms );
+		if ( this.renderer ) {
+
+			this.renderPipeline = new RenderPipeline( this.renderer, this.commonUniforms );
+
+		}
 
 		this.cameraController = new CameraController( this.camera, this.scene.getObjectByName( 'CameraData' ) );
 
@@ -52,9 +60,17 @@ export class MainScene extends ORE.BaseLayer {
 
 		if ( ! window.assetManager.isLoaded ) return;
 
-		this.cameraController.update( deltaTime );
+		if ( this.cameraController ) {
 
-		this.renderPipeline.render( this.scene, this.camera );
+			this.cameraController.update( deltaTime );
+
+		}
+
+		if ( this.renderPipeline ) {
+
+			this.renderPipeline.render( this.scene, this.camera );
+
+		}
 
 	}
 
@@ -64,7 +80,11 @@ export class MainScene extends ORE.BaseLayer {
 
 		if ( ! window.assetManager.isLoaded ) return;
 
-		this.renderPipeline.resize( this.info.size.canvasPixelSize );
+		if ( this.renderPipeline ) {
+
+			this.renderPipeline.resize( this.info.size.canvasPixelSize );
+
+		}
 
 	}
 
@@ -72,7 +92,11 @@ export class MainScene extends ORE.BaseLayer {
 
 		if ( ! window.assetManager.isLoaded ) return;
 
-		this.cameraController.updateCursor( args.normalizedPosition );
+		if ( this.cameraController ) {
+
+			this.cameraController.updateCursor( args.normalizedPosition );
+
+		}
 
 	}
 

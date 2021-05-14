@@ -1,49 +1,53 @@
 import * as THREE from 'three';
-export declare interface TouchObjects{
-	objs: THREE.Intersection[];
-	elms: HTMLElement;
+export declare interface TouchObjects {
+	objs: THREE.Intersection[]
+	elms: HTMLElement
 }
 
 declare interface ClickEventInfo {
-	objName: string;
-	event: Function;
+	objName: string
+	event: Function
 }
 declare interface HoverEventInfo {
-	objName: string;
-	event: ( hover: boolean, obj: THREE.Object3D | HTMLElement ) => void;
+	objName: string
+	event: ( hover: boolean, obj: THREE.Object3D | HTMLElement ) => void
 }
 
 declare interface ElementInfo {
-	element: HTMLElement;
-	mouseOverHandler: any;
-	mouseOutHandler: any;
+	element: HTMLElement
+	mouseOverHandler: any
+	mouseOutHandler: any
 }
 
 export class EasyRaycaster {
 
-	public enableMeshRaycaster: boolean = true;
-	public enableElementRaycaster: boolean = true;
+	public enableMeshRaycaster = true
+	public enableElementRaycaster = true
 
-	private raycaster: THREE.Raycaster;
-	private hoverElm: HTMLElement;
+	private raycaster: THREE.Raycaster
+	private hoverElm: HTMLElement | null
 
-	private touchStartPos: THREE.Vector2 = new THREE.Vector2();
-	private touchStartTime: Date;
+	private touchStartPos: THREE.Vector2 = new THREE.Vector2()
+	private touchStartTime: Date | null
 
-	private elementInfos: ElementInfo[] = [];
+	private elementInfos: ElementInfo[] = []
 
-	private hoverMemObj: THREE.Object3D;
-	private holdObj: THREE.Object3D;
+	private hoverMemObj: THREE.Object3D | null
+	private holdObj: THREE.Object3D | null
 
-	private clickEvents: ClickEventInfo[] = [];
-	private hoverEvents: HoverEventInfo[] = [];
+	private clickEvents: ClickEventInfo[] = []
+	private hoverEvents: HoverEventInfo[] = []
 
-	public onChangeHitObject: ( object: THREE.Object3D | HTMLElement ) => void;
-	public onTouchObject: ( object: THREE.Object3D ) => void;
+	public onChangeHitObject?: ( object: THREE.Object3D | HTMLElement | null ) => void
+	public onTouchObject?: ( object: THREE.Object3D | null ) => void
 
 	constructor() {
 
 		this.raycaster = new THREE.Raycaster();
+		this.hoverMemObj = null;
+		this.holdObj = null;
+		this.hoverElm = null;
+		this.touchStartTime = null;
 
 	}
 
@@ -51,7 +55,7 @@ export class EasyRaycaster {
 
 		if ( ! objects ) return null;
 
-		let objs = [];
+		const objs = [];
 
 		for ( let i = 0; i < objects.length; i ++ ) {
 
@@ -60,11 +64,11 @@ export class EasyRaycaster {
 
 		}
 
-		let m = new THREE.Vector2( cursorPos.x, cursorPos.y );
+		const m = new THREE.Vector2( cursorPos.x, cursorPos.y );
 
 		this.raycaster.setFromCamera( m, camera );
 
-		let intersection = this.raycaster.intersectObjects( objs );
+		const intersection = this.raycaster.intersectObjects( objs );
 
 		for ( let i = 0; i < intersection.length; i ++ ) {
 
@@ -80,7 +84,7 @@ export class EasyRaycaster {
 
 		if ( ! this.enableMeshRaycaster ) return null;
 
-		let hitObj = this.getHitObject( cursorPos, camera, objects );
+		const hitObj = this.getHitObject( cursorPos, camera, objects );
 
 		if ( hitObj ) {
 
@@ -88,7 +92,7 @@ export class EasyRaycaster {
 
 				for ( let i = 0; i < this.hoverEvents.length; i ++ ) {
 
-					let e = this.hoverEvents[ i ];
+					const e = this.hoverEvents[ i ];
 
 					if ( hitObj.name == e.objName ) {
 
@@ -116,7 +120,7 @@ export class EasyRaycaster {
 
 				for ( let i = 0; i < this.hoverEvents.length; i ++ ) {
 
-					let e = this.hoverEvents[ i ];
+					const e = this.hoverEvents[ i ];
 
 					if ( this.hoverMemObj.name == e.objName ) {
 
@@ -142,11 +146,11 @@ export class EasyRaycaster {
 
 	}
 
-	public addElements( elements: NodeListOf<Element> )
+	public addElements( elements: NodeListOf<Element> ): void
 
-	public addElements( elements: HTMLElement[] )
+	public addElements( elements: HTMLElement[] ): void
 
-	public addElements( elements: HTMLElement )
+	public addElements( elements: HTMLElement ): void
 
 	public addElements( elements: any ) {
 
@@ -160,10 +164,10 @@ export class EasyRaycaster {
 
 		for ( let i = 0; i < elements.length; i ++ ) {
 
-			let elementInfo: ElementInfo = {
+			const elementInfo: ElementInfo = {
 				mouseOverHandler: this.onMouseOver.bind( this, elements[ i ] ),
 				mouseOutHandler: this.onMouseOut.bind( this, elements[ i ] ),
-				element: elements[ i ]
+				element: elements[ i ],
 			};
 
 			elements[ i ].addEventListener( 'mouseenter', elementInfo.mouseOverHandler, false );
@@ -174,7 +178,7 @@ export class EasyRaycaster {
 
 				for ( let j = 0; j < this.clickEvents.length; j ++ ) {
 
-					let e = this.clickEvents[ j ];
+					const e = this.clickEvents[ j ];
 
 					if ( ( event.target as HTMLElement ).classList.contains( e.objName ) ) {
 
@@ -208,7 +212,7 @@ export class EasyRaycaster {
 
 		this.clickEvents.push( {
 			objName: objName,
-			event: event
+			event: event,
 		} );
 
 	}
@@ -217,7 +221,7 @@ export class EasyRaycaster {
 
 		this.hoverEvents.push( {
 			objName: objName,
-			event: event
+			event: event,
 		} );
 
 	}
@@ -239,9 +243,9 @@ export class EasyRaycaster {
 
 		if ( this.holdObj ) {
 
-			let object = this.getHitObject( normalizePos, camera, objects );
+			const object = this.getHitObject( normalizePos, camera, objects );
 
-			if ( object && object.name == this.holdObj.name ) {
+			if ( object && object.name == this.holdObj.name && this.touchStartTime != null ) {
 
 				if ( new Date().getTime() - this.touchStartTime.getTime() > 200 ) return;
 
@@ -255,7 +259,7 @@ export class EasyRaycaster {
 
 				for ( let i = 0; i < this.clickEvents.length; i ++ ) {
 
-					let e = this.clickEvents[ i ];
+					const e = this.clickEvents[ i ];
 
 					if ( this.holdObj.name == e.objName ) {
 
@@ -281,7 +285,7 @@ export class EasyRaycaster {
 
 		for ( let j = 0; j < this.hoverEvents.length; j ++ ) {
 
-			let e = this.hoverEvents[ j ];
+			const e = this.hoverEvents[ j ];
 
 			if ( this.hoverElm.classList.contains( e.objName ) ) {
 
@@ -305,16 +309,15 @@ export class EasyRaycaster {
 
 		for ( let j = 0; j < this.hoverEvents.length; j ++ ) {
 
-			let e = this.hoverEvents[ j ];
+			const e = this.hoverEvents[ j ];
 
-			if ( elm.classList.contains( e.objName ) ) {
+			if ( elm.classList.contains( e.objName ) && this.hoverElm ) {
 
 				e.event( false, this.hoverElm );
 
 			}
 
 		}
-
 
 		if ( this.onChangeHitObject ) {
 
