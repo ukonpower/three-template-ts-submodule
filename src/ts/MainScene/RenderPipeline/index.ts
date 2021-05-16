@@ -257,7 +257,7 @@ export class RenderPipeline {
 
 	}
 
-	public render( scene: THREE.Scene, camera: THREE.Camera ) {
+	public render( scene: THREE.Scene, camera: THREE.Camera, renderTarget?: THREE.WebGLRenderTarget ) {
 
 		/*------------------------
 			Scene
@@ -329,7 +329,7 @@ export class RenderPipeline {
 
 		}
 
-		this.compositePP.render( compositeInputRenderTargets, null );
+		this.compositePP.render( compositeInputRenderTargets, renderTarget );
 
 		this.renderer.autoClear = true;
 
