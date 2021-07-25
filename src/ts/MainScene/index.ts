@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { GlobalManager } from './GlobalManager';
 import { RenderPipeline } from './RenderPipeline';
 import { CameraController } from './CameraController';
+import { AssetManager } from './GlobalManager/AssetManager';
 export class MainScene extends ORE.BaseLayer {
 
 	private gManager?: GlobalManager;
@@ -22,19 +23,24 @@ export class MainScene extends ORE.BaseLayer {
 		super.onBind( info );
 
 		this.gManager = new GlobalManager( {
-			onMustAssetsLoaded: () => {
+			assets: [
+				{ name: 'scene', path: './assets/scene/scene.glb', type: 'gltf' }
+			]
+		} );
 
-				if ( window.assetManager.gltfScene ) {
+		this.gManager.assetManager.addEventListener( 'loadMustAssets', ( e ) => {
 
-					this.scene.add( window.assetManager.gltfScene );
+			let gltf = ( e.target as AssetManager ).getGltf( 'scene' );
 
-				}
+			if ( gltf ) {
 
-				this.initScene();
-
-				window.dispatchEvent( new Event( 'resize' ) );
+				this.scene.add( gltf.scene );
 
 			}
+
+			this.initScene();
+			this.onResize();
+
 		} );
 
 	}
@@ -58,8 +64,6 @@ export class MainScene extends ORE.BaseLayer {
 
 	public animate( deltaTime: number ) {
 
-		if ( ! window.assetManager.isLoaded ) return;
-
 		if ( this.cameraController ) {
 
 			this.cameraController.update( deltaTime );
@@ -78,8 +82,6 @@ export class MainScene extends ORE.BaseLayer {
 
 		super.onResize();
 
-		if ( ! window.assetManager.isLoaded ) return;
-
 		if ( this.renderPipeline ) {
 
 			this.renderPipeline.resize( this.info.size.canvasPixelSize );
@@ -89,8 +91,6 @@ export class MainScene extends ORE.BaseLayer {
 	}
 
 	public onHover( args: ORE.TouchEventArgs ) {
-
-		if ( ! window.assetManager.isLoaded ) return;
 
 		if ( this.cameraController ) {
 
