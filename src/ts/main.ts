@@ -41,15 +41,6 @@ class APP {
 
 	}
 
-	private checkUA() {
-
-	}
-
-	private initORE() {
-
-
-	}
-
 }
 
 window.addEventListener( 'load', ()=>{
