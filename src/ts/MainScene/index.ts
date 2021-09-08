@@ -22,11 +22,11 @@ export class MainScene extends ORE.BaseLayer {
 
 		super.onBind( info );
 
-		this.gManager = new GlobalManager( {
-			assets: [
-				{ name: 'scene', path: './assets/scene/scene.glb', type: 'gltf' }
-			]
-		} );
+		this.gManager = new GlobalManager();
+
+		this.gManager.assetManager.load( { assets: [
+			{ name: 'scene', path: './assets/scene/scene.glb', type: 'gltf' }
+		] } );
 
 		this.gManager.assetManager.addEventListener( 'loadMustAssets', ( e ) => {
 
@@ -56,7 +56,6 @@ export class MainScene extends ORE.BaseLayer {
 		this.cameraController = new CameraController( this.camera, this.scene.getObjectByName( 'CameraData' ) );
 
 		let light = new THREE.DirectionalLight();
-		light.intensity = 0.8;
 		light.position.set( 1, 2, 1 );
 		this.scene.add( light );
 
@@ -82,6 +81,12 @@ export class MainScene extends ORE.BaseLayer {
 
 		super.onResize();
 
+		if ( this.cameraController ) {
+
+			this.cameraController.resize( this.info );
+
+		}
+
 		if ( this.renderPipeline ) {
 
 			this.renderPipeline.resize( this.info.size.canvasPixelSize );
@@ -97,6 +102,18 @@ export class MainScene extends ORE.BaseLayer {
 			this.cameraController.updateCursor( args.normalizedPosition );
 
 		}
+
+	}
+
+	public onTouchStart( args: ORE.TouchEventArgs ) {
+
+	}
+
+	public onTouchMove( args: ORE.TouchEventArgs ) {
+
+	}
+
+	public onTouchEnd( args: ORE.TouchEventArgs ) {
 
 	}
 

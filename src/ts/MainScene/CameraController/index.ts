@@ -24,7 +24,7 @@ export class CameraController {
 		this.cameraTargetPos = cameraTarget ? cameraTarget.getWorldPosition( new THREE.Vector3() ) : new THREE.Vector3( 0, 1, 0 );
 
 		let baseCamera = data && data.getObjectByName( 'Camera' );
-		this.baseCamera = baseCamera ? baseCamera.children[ 0 ] as THREE.PerspectiveCamera : camera.clone();
+		this.baseCamera = baseCamera ? ( baseCamera.children[ 0 ] as THREE.PerspectiveCamera ) : camera.clone() as THREE.PerspectiveCamera;
 
 		this.cursorPos = new THREE.Vector2();
 		this.cursorPosDelay = new THREE.Vector2();
