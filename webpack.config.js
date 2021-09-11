@@ -1,6 +1,4 @@
-var webpack = require('webpack');
-var path = require('path');
-
+const path = require( 'path' )
 module.exports = {
 	watch: true,
     mode: 'development',
@@ -36,8 +34,8 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: [".ts", ".js", ".json"],
-        alias: {
+        extensions: [".ts", ".js"],
+		alias: {
             "@ore-three-ts": path.resolve(__dirname, 'src/common/ts/ore-three-ts/src')
         }
 	},
