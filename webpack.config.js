@@ -1,12 +1,14 @@
-const path = require( 'path' )
+const path = require( 'path' );
+
 module.exports = {
 	watch: true,
+	watchOptions: {
+		aggregateTimeout: 100,
+	},
     mode: 'development',
     entry: {
-        main: ''
     },
     output: {
-        filename: ''
     },
     module: {
         rules: [{

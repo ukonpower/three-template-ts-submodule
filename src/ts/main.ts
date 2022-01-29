@@ -1,4 +1,4 @@
-import * as ORE from '@ore-three-ts';
+import * as ORE from 'ore-three-ts';
 import { MainScene } from './MainScene';
 
 import { GlobalManager } from './MainScene/GlobalManager';
@@ -13,6 +13,7 @@ declare global {
 		mainScene: MainScene;
 	}
 }
+
 
 class APP {
 

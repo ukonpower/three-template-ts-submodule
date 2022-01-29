@@ -1,4 +1,4 @@
-# three-template-ts (submodule ver.)
+# three-template-ts
 
 This is a template using threejs and ore-three.
 
