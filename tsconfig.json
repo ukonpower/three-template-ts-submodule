@@ -9,6 +9,7 @@
 		"es2017",
 		"dom"
 	  ],
+	  "allowSyntheticDefaultImports": true,
 	  "typeRoots": ["node_modules/@types"],
 	  "rootDir": "./src/",
 	  "outDir": "./public",

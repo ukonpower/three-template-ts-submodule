@@ -47,6 +47,7 @@
   "dependencies": {
     "@types/three": "^0.137.0",
     "ore-three-ts": "^2.1.0",
-    "three": "^0.137.5"
+    "three": "^0.137.5",
+    "wolfy87-eventemitter": "^5.2.9"
   }
 }
