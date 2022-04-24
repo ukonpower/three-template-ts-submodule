@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import * as ORE from 'ore-three-ts';
+import * as ORE from '@ore-three-ts';
 
 export class CameraController {
 
-	private camera: THREE.PerspectiveCamera
+	private camera: THREE.PerspectiveCamera;
 	private cameraBasePos: THREE.Vector3;
 	private cameraTargetPos: THREE.Vector3;
 

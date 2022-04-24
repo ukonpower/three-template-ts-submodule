@@ -1,4 +1,4 @@
-import * as ORE from 'ore-three-ts';
+import * as ORE from '@ore-three-ts';
 import * as THREE from 'three';
 import { GlobalManager } from './GlobalManager';
 import { RenderPipeline } from './RenderPipeline';

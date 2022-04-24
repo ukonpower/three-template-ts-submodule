@@ -46,8 +46,9 @@
   },
   "dependencies": {
     "@types/three": "^0.139.0",
-    "ore-three-ts": "^2.2.0",
+    "lethargy": "^1.0.9",
     "three": "^0.139.2",
+    "to-px": "^1.1.0",
     "wolfy87-eventemitter": "^5.2.9"
   }
 }

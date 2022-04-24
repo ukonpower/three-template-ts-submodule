@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as ORE from 'ore-three-ts';
+import * as ORE from '@ore-three-ts';
 
 import { AssetManager, AssetManagerParams } from './AssetManager';
 import { EasyRaycaster } from './EasyRaycaster';
@@ -7,7 +7,7 @@ import { Uniform } from 'three';
 
 export class GlobalManager {
 
-	public eRay: EasyRaycaster
+	public eRay: EasyRaycaster;
 	public assetManager: AssetManager;
 	public animator: ORE.Animator;
 
